@@ -88,20 +88,20 @@ public class PersonalDetailsValidation extends SelTestCase {
 				String profileFirstName =PersonalDetails.getFirstNameValue().toLowerCase().trim();
 				String profileLastname = PersonalDetails.getLastNameValue().toLowerCase().trim();
 				
-				String incorrectTitleErrorMsg = MessageFormat.format(LoggingMsg.ACTUAL_EXPECTED_ERROR,
-						profileTitle, ((String) userDetails.get(Registration.keys.title)).toLowerCase().trim());
+//				String incorrectTitleErrorMsg = MessageFormat.format(LoggingMsg.ACTUAL_EXPECTED_ERROR,
+//						profileTitle, ((String) userDetails.get(Registration.keys.title)).toLowerCase().trim());
 				String incorrectFirstNameErrorMsg = MessageFormat.format(LoggingMsg.ACTUAL_EXPECTED_ERROR,
 						profileFirstName, ((String) userDetails.get(Registration.keys.firstName)).toLowerCase().trim());
 				String incorrectlastNameErrorMsg = MessageFormat.format(LoggingMsg.ACTUAL_EXPECTED_ERROR,
 						profileLastname,   ((String) userDetails.get(Registration.keys.lastName)).toLowerCase().trim());
 				
-				sassert().assertTrue(profileTitle.contains(((String) userDetails.get(Registration.keys.title)).toLowerCase()), incorrectTitleErrorMsg);
+//				sassert().assertTrue(profileTitle.contains(((String) userDetails.get(Registration.keys.title)).toLowerCase()), incorrectTitleErrorMsg);
 				sassert().assertTrue(profileFirstName.contains(((String) userDetails.get(Registration.keys.firstName)).toLowerCase()),incorrectFirstNameErrorMsg);
 				sassert().assertTrue(profileLastname.contains(((String) userDetails.get(Registration.keys.lastName)).toLowerCase()),incorrectlastNameErrorMsg);
 			} else {
-				PersonalDetails.fillInNewValuesAndClickUpdateOrCancel((String) userDetails.get(Registration.keys.title)
-						, firstName, lastName, doClickUpdateBtn,
-						doClickCancelBtn);
+//				PersonalDetails.fillInNewValuesAndClickUpdateOrCancel((String) userDetails.get(Registration.keys.title)
+//						, firstName, lastName, doClickUpdateBtn,
+//						doClickCancelBtn);
 				Thread.sleep(3000);
 				if (doClickUpdateBtn) {
 					String globalAlertMsg = MessageFormat.format(LoggingMsg.ACTUAL_EXPECTED_ERROR,
@@ -124,11 +124,11 @@ public class PersonalDetailsValidation extends SelTestCase {
 			
 			if(revertChanges)
 			{
-				getDriver().get(url);
-				PersonalDetails.fillInNewValuesAndClickUpdateOrCancel((String) userDetails.get(Registration.keys.title),
-						(String) userDetails.get(Registration.keys.firstName),
-						(String) userDetails.get(Registration.keys.lastName), doClickUpdateBtn, doClickCancelBtn);
-				Thread.sleep(2000);
+//				getDriver().get(url);
+//				PersonalDetails.fillInNewValuesAndClickUpdateOrCancel((String) userDetails.get(Registration.keys.title),
+//						(String) userDetails.get(Registration.keys.firstName),
+//						(String) userDetails.get(Registration.keys.lastName), doClickUpdateBtn, doClickCancelBtn);
+//				Thread.sleep(2000);
 			}
 			
 			sassert().assertAll();

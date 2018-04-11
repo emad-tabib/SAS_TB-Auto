@@ -91,14 +91,15 @@ public class AddressBookValidation extends SelTestCase {
 				AddressBook.clickEditAddress();
 				LinkedHashMap<String, Object> addressDetails = (LinkedHashMap<String, Object>) addresses
 						.get(newaddress);
-				AddressBook.fillAndClickSave((String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
-						(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
+				AddressBook.fillAndClickSave(
 						"NEW_" + RandomUtils.nextInt(1000, 9000),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.lastName),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
+						(String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.city),
+						(String) addressDetails.get(CheckOut.shippingAddress.keys.state),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.postal),
-						(String) addressDetails.get(CheckOut.shippingAddress.keys.phone));
+						(String) addressDetails.get(CheckOut.shippingAddress.keys.phone), true);
 				AddressBook.clickAddressBackBtn();
 				assertNotEquals(addressbook, AddressBook.getFirstAddressDetails());
 			}
@@ -119,12 +120,13 @@ public class AddressBookValidation extends SelTestCase {
 				getDriver().get(AddressBookSelectors.addaddressurl);
 				LinkedHashMap<String, Object> addressDetails = (LinkedHashMap<String, Object>) addresses
 						.get(newaddress);
-				AddressBook.fillAndClickSave((String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
-						(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
+				AddressBook.fillAndClickSave(
 						"NEW_" + RandomUtils.nextInt(1000, 9000),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.lastName),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
+						(String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.city),
+						(String) addressDetails.get(CheckOut.shippingAddress.keys.state),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.postal),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.phone), defaultAddress);
 				AddressBook.clickAddressBackBtn();

@@ -26,8 +26,8 @@ public class PDP extends SelTestCase {
 		public static final String desc = "desc";
 		public static final String reviews = "reviews";
 		public static final String rating = "rating";
-		
-		
+		public static final String scene7Image = "scene7Image";
+			
 	}
 	public static void addProductsToCartAndClickCheckOut(String url, String color, String size, String qty) throws Exception {
 		getDriver().get(url);
@@ -40,6 +40,7 @@ public class PDP extends SelTestCase {
 
 		defineQty(qty);
 		clickAddToCartBtn();
+		clickProceedToCheckout();
 		getCurrentFunctionName(false);
 	}
 	
@@ -48,7 +49,8 @@ public class PDP extends SelTestCase {
 		getCurrentFunctionName(true);
 		if (!"".equals(color))
 			selectcolor(color);
-
+		
+		Thread.sleep(2000);
 		if (!"".equals(size))
 			selectsize(size);
 
@@ -57,7 +59,18 @@ public class PDP extends SelTestCase {
 		Thread.sleep(2000);
 		getCurrentFunctionName(false);
 	}
+	
+	public static void clickProceedToCheckout() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		logs.debug(MessageFormat.format(LoggingMsg.CLICKING_CART_BUTTON, "proceedToCheckout"));
+		subStrArr.add(CartSelectors.proceedToCheckout);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
 
+	}
 	public static String getPrice() throws Exception {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
@@ -93,7 +106,7 @@ public class PDP extends SelTestCase {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
-		subStrArr.add(size);
+		subStrArr.add(PDPSelectors.size);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
@@ -159,7 +172,7 @@ public class PDP extends SelTestCase {
 		subStrArr.add(PDPSelectors.rating);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
-		String numberOfFoundElements = SelectorUtil.textValue.get().replace("Reviews", "").trim();
+		String numberOfFoundElements = SelectorUtil.textValue.get().replace("Reviews", "").replace("Review", "").trim();
 		getCurrentFunctionName(false);
 		return numberOfFoundElements;
 	}

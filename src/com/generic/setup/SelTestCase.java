@@ -45,7 +45,7 @@ public class SelTestCase {
     
     //protected SoftAssert softAssert = new SoftAssert();
     private static ThreadLocal<SoftAssert> softAssert = new ThreadLocal<SoftAssert>();
-    protected static ThreadLocal<XmlTest> testObj = new ThreadLocal<XmlTest>();
+    public static ThreadLocal<XmlTest> testObj = new ThreadLocal<XmlTest>();
     
     //private static ThreadLocal<String> testName= new ThreadLocal<String>(); 
     
@@ -76,6 +76,7 @@ public class SelTestCase {
     public static int caseIndex;
     
     public static String rUNDATE = ReportUtil.now(time_date_format).toString();
+    public static String suiteName;
 
     public static String getBrowserName() {
         //return browserName;
@@ -185,10 +186,17 @@ public class SelTestCase {
     public static void getBrowserWait(String BrowserName)
     {
     	try {
+    		int waitBrowser = RandomUtils.nextInt(0,2000); 
+    		logs.debug("waiting test: " + waitBrowser);
+    		Thread.sleep(waitBrowser);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+    	try {
 			if (BrowserName.equals("firefox"))
 				Thread.sleep(1000);
 			else if (BrowserName.equals("chrome"))
-				Thread.sleep(1500);
+				Thread.sleep(500);
 			else
 				Thread.sleep(RandomUtils.nextInt(900,1200));
 		} catch (InterruptedException e) {
@@ -233,6 +241,8 @@ public class SelTestCase {
     {
     	softAssert.set(new SoftAssert());
     }
+
+
     
     /**setUp function will be invoked by Junit before execution of every test case.
      * It initializes the property files and html report setup
@@ -241,6 +251,7 @@ public class SelTestCase {
     @BeforeMethod
     public void setUp(XmlTest test) throws Exception  {
     	getCurrentFunctionName(true);
+    	suiteName = test.getSuite().getName();
     	testObj.set(test);
     	setAssert();
         try {
@@ -291,7 +302,7 @@ public class SelTestCase {
     
     
     @AfterSuite
-    public static void reportMaker()
+    public static void reportMaker() throws IOException
     {
     	ArrayList<HashMap<String, String>> casesDetails = null;
     	try {
@@ -337,5 +348,6 @@ public class SelTestCase {
          {
          	SelTestCase.logs.debug(MessageFormat.format(LoggingMsg.DEBUGGING_TEXT, "Ignor sending report"));
          }
+    	 ReportUtil.copyReportToC(SelTestCase.logDir,"C://AutoRepo");
     }
 }

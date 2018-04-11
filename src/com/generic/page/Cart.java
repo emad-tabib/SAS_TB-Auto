@@ -2,6 +2,7 @@ package com.generic.page;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.generic.selector.CartSelectors;
+import com.generic.selector.CheckOutSelectors;
 import com.generic.setup.SelTestCase;
 import com.generic.setup.ExceptionMsg;
 import com.generic.setup.LoggingMsg;
@@ -21,7 +23,7 @@ public class Cart extends SelTestCase {
 		public static final String invalidCoupon = "invalid";
 
 	}
-
+	
 	public static void clickCheckout() throws Exception {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
@@ -53,19 +55,16 @@ public class Cart extends SelTestCase {
 		subStrArr.add(CartSelectors.numberOfProducts);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
-		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_PRODUCTS, SelectorUtil.textValue.get()));
+		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_PRODUCTS, SelectorUtil.numberOfFoundElements.get()));
 		getCurrentFunctionName(false);
-		return SelectorUtil.textValue.get();
+		return SelectorUtil.numberOfFoundElements.get();
 	}
 	
-	public static String getProductQty(String browser, int lineOrder) throws Exception {
+	public static String getProductQty() throws Exception {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
-		if (browser.contains("mobile"))
-			subStrArr.add(CartSelectors.productQtyBoxMobile+lineOrder);
-		else
-			subStrArr.add(CartSelectors.productQtyBox+lineOrder);
+		subStrArr.add(CartSelectors.selectedQty);
 		valuesArr.add("getCurrentValue");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_PRODUCTS, SelectorUtil.textValue.get()));
@@ -166,12 +165,24 @@ public class Cart extends SelTestCase {
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
 	}
-
+	
 	public static String validateCoupon() throws Exception {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
-		subStrArr.add(CartSelectors.couponErrorMessage);
+		subStrArr.add(CartSelectors.promoText);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		logs.debug(MessageFormat.format(LoggingMsg.COUPON_MSG, SelectorUtil.textValue.get()));
+		return SelectorUtil.textValue.get();
+	}
+	
+	public static String getGlobalMessage() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(CartSelectors.globalAlert);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
@@ -179,25 +190,35 @@ public class Cart extends SelTestCase {
 		return SelectorUtil.textValue.get();
 	}
 
-	public static void updateQuantityValue(String browser, String lineOrder, String qty) throws Exception {
-		// Limited to edit first product qty
-		getCurrentFunctionName(true);
-		writeNewQunatity(browser, lineOrder, qty+",pressEnter");
-		getCurrentFunctionName(false);
-	}
-
-	private static void writeNewQunatity(String browser, String lineOrder, String qty) throws Exception {
+	public static void selectQty(String newQty) throws Exception {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
-		if (browser.contains("mobile"))
-			subStrArr.add(CartSelectors.productQtyBoxMobile+lineOrder);
-		else
-			subStrArr.add(CartSelectors.productQtyBox+lineOrder);
-		valuesArr.add(qty);
+		subStrArr.add(CartSelectors.qty);
+		valuesArr.add(newQty);
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
 	}
+	
+//	public static void updateQuantityValue(String browser, String lineOrder, String qty) throws Exception {
+//		// Limited to edit first product qty
+//		getCurrentFunctionName(true);
+//		writeNewQunatity(browser, lineOrder, qty+",pressEnter");
+//		getCurrentFunctionName(false);
+//	}
+//
+//	private static void writeNewQunatity(String browser, String lineOrder, String qty) throws Exception {
+//		getCurrentFunctionName(true);
+//		List<String> subStrArr = new ArrayList<String>();
+//		List<String> valuesArr = new ArrayList<String>();
+//		if (browser.contains("mobile"))
+//			subStrArr.add(CartSelectors.productQtyBoxMobile+lineOrder);
+//		else
+//			subStrArr.add(CartSelectors.productQtyBox+lineOrder);
+//		valuesArr.add(qty);
+//		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+//		getCurrentFunctionName(false);
+//	}
 
 	public static String getErrorMsg() throws Exception {
 		getCurrentFunctionName(true);
@@ -259,7 +280,7 @@ public class Cart extends SelTestCase {
 		getCurrentFunctionName(true);
 
 		if (!isCartEmpty()) {
-			int numberOfItems = Integer.parseInt(getNumberOfproducts().split(" ")[0]);
+			int numberOfItems = Integer.parseInt(getNumberOfproducts());
 			logs.debug(LoggingMsg.REMOVE_ALL_ITEMS_FROM_CART);
 			for (int itemIndex = numberOfItems - 1; itemIndex >= 0; itemIndex--)
 				removeItemFromCart(0); // keep always remove the first item
@@ -272,7 +293,7 @@ public class Cart extends SelTestCase {
 
 	public static void removeItemFromCart(int itemIndex) throws Exception {
 		getCurrentFunctionName(true);
-		clickOnactionMenue(itemIndex);
+	//	clickOnactionMenue(itemIndex);
 		clickOnRemove(itemIndex);
 		getCartMsg();
 		getCurrentFunctionName(false);
@@ -282,7 +303,7 @@ public class Cart extends SelTestCase {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
-		subStrArr.add(CartSelectors.removeItem + itemIndex);
+		subStrArr.add(CartSelectors.removeItem);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
@@ -325,10 +346,69 @@ public class Cart extends SelTestCase {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		subStrArr.add(CartSelectors.itemLink);
-		String attrValue =SelectorUtil.getAttr(subStrArr, "href");
-		logs.debug("links check result is: " + attrValue);
-		logs.debug("links is: " + PLink);
+		String attrValue =SelectorUtil.getAttr(subStrArr, "src");
+		logs.debug("link check result is: " + attrValue);
+		logs.debug("Expected link is: " + PLink);
 		getCurrentFunctionName(false);
 		return PLink.contains(attrValue);
 	}
+
+	public static String getProductUnitPrice() throws Exception{
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(CartSelectors.unitPrice);
+		valuesArr.add("");
+		String salePrice = "";
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		String unitPrice = SelectorUtil.textValue.get();
+		logs.debug ( "unit price is: "+ unitPrice);
+		salePrice = unitPrice.split("$")[(unitPrice.split("$").length)-1];
+		logs.debug ( "sale price is: "+ salePrice);
+		getCurrentFunctionName(false);
+		return salePrice;
+	}
+
+	public static String getProductSubtotal() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(CartSelectors.productSubtotal);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		logs.debug ( "product subtotal is: "+SelectorUtil.textValue.get());
+		String totals = SelectorUtil.textValue.get();
+		getCurrentFunctionName(false);
+		return totals;
+	}
+
+	public static String getOrderDiscount() throws Exception {
+		getCurrentFunctionName(true);
+		String totals = getTotals();
+		getCurrentFunctionName(false);
+		return totals.split("\n")[3].trim();
+
+	}
+	
+	public static String getPromotionalDiscount() throws Exception {
+		getCurrentFunctionName(true);
+		String totals = getTotals();
+		getCurrentFunctionName(false);
+		return totals.split("\n")[5].trim();
+
+	}
+	
+	public static String getTotals() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(CartSelectors.totals);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		logs.debug(MessageFormat.format(LoggingMsg.ORDER_TOTAL, SelectorUtil.textValue.get()));
+		String totals = SelectorUtil.textValue.get();
+		getCurrentFunctionName(false);
+		return totals;
+	}
+
 }

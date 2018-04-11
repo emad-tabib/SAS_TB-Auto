@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 
+import com.generic.selector.CartSelectors;
 import com.generic.selector.CheckOutSelectors;
 import com.generic.selector.HomePageSelectors;
 import com.generic.setup.EnvironmentFiles;
@@ -26,6 +27,18 @@ import ru.yandex.qatools.ashot.comparison.ImageDiffer;
  * The Class HomePage.
  */
 public class HomePage extends SelTestCase {
+	
+	public static void closeSubcriptionPopup() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		logs.debug(MessageFormat.format(LoggingMsg.CLICKING_CLOSE_ICON, "subcription closes icon"));
+		subStrArr.add(HomePageSelectors.subcriptionCloseIcon);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+
+	}
 	
 	public static void prepareBaselineforLogs(String baseline) throws Exception {
 		getCurrentFunctionName(true);
@@ -155,5 +168,45 @@ public class HomePage extends SelTestCase {
 		getCurrentFunctionName(false);
 		return !diff.hasDiff();
 	}
-    
+
+	public static void changeCountry(String country) throws Exception{
+		clickShipToBtn();
+		selectCountry(country);
+		clickupdateCountryBtn();
+	}
+	
+	public static void clickShipToBtn() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+	//	logs.debug(MessageFormat.format(LoggingMsg.CLICKING_CLOSE_ICON, "subcription closes icon"));
+		subStrArr.add(HomePageSelectors.shipToIcon);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+
+	}
+	
+	public static void selectCountry(String country) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(HomePageSelectors.selectCountry);
+		valuesArr.add(country);
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+
+	}
+	
+	public static void clickupdateCountryBtn() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+	//	logs.debug(MessageFormat.format(LoggingMsg.CLICKING_CLOSE_ICON, "subcription closes icon"));
+		subStrArr.add(HomePageSelectors.updateCountryLink);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+
+	}
 }

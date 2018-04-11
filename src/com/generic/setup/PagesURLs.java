@@ -7,7 +7,9 @@ public class PagesURLs extends SelTestCase {
 	public static String HP = "HomePage";
 	public static String driversPath = "driversPath";
 	public static String personalDetailsPage = "personalDetailsPage";
-	public static String emailAddressPage = "emailAddressPage";
+	public static String myAccountPage = "myAccountPage";
+	public static String loginPage = "loginPage";
+	public static String kioskPage = "kioskPage";
 	public static String paymentDetailsPage = "paymentDetailsPage";
 	public static String passwordPage = "passwordPage";
 	public static String orderHistoryPage = "orderHistoryPage";
@@ -44,11 +46,39 @@ public class PagesURLs extends SelTestCase {
 				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, driversPath));
 			}
 	}
+	public static String getLoginPage() {
+		try {
+			return getCONFIG().getProperty(loginPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, loginPage));
+			}
+	}
+	public static void setLoginPage(String newLoginPage) {
+		try {
+			getCONFIG().setProperty(loginPage,newLoginPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, loginPage));
+			}
+	}
+	public static String getKioskPage() {
+		try {
+			return getCONFIG().getProperty(kioskPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, kioskPage));
+			}
+	}
+	public static void setKioskPage(String newKioskPage) {
+		try {
+			getCONFIG().setProperty(kioskPage,newKioskPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, kioskPage));
+			}
+	}
 	public static String getPersonalDetailsPage() {
 		try {
-			return getCONFIG().getProperty(personalDetailsPage);
+			return getCONFIG().getProperty(kioskPage);
 			} catch(Throwable t) {
-				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, personalDetailsPage));
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, kioskPage));
 			}
 	}
 	public static void setPersonalDetailsPage(String newPersonalDetailsPage) {
@@ -58,18 +88,18 @@ public class PagesURLs extends SelTestCase {
 				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, personalDetailsPage));
 			}
 	}
-	public static String getEmailAddressPage() {
+	public static String getMyAccountPage() {
 		try {
-			return getCONFIG().getProperty(emailAddressPage);
+			return getCONFIG().getProperty(myAccountPage);
 			} catch(Throwable t) {
-				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, emailAddressPage));
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, myAccountPage));
 			}
 	}
-	public static void setEmailAddressPage(String newEmailAddressPage) {
+	public static void setMyAccountPage(String newMyAccountPage) {
 		try {
-			getCONFIG().setProperty(emailAddressPage,newEmailAddressPage);
+			getCONFIG().setProperty(myAccountPage,newMyAccountPage);
 			} catch(Throwable t) {
-				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, emailAddressPage));
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, myAccountPage));
 			}
 	}
 	public static String getPaymentDetailsPage() {

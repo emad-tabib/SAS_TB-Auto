@@ -5,18 +5,18 @@ import com.generic.setup.EnvironmentFiles;
 import com.generic.setup.LoggingMsg;
 import com.generic.setup.SelTestCase;
 
-public class dataProviderUtils {
+public class dataProviderUtils2 {
 
-	private static dataProviderUtils myObj;
+	private static dataProviderUtils2 myObj;
 	SASLogger logs = new SASLogger("DataProviderUtils");
 
-	private dataProviderUtils() {
+	private dataProviderUtils2() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static dataProviderUtils getInstance() {
+	public static dataProviderUtils2 getInstance() {
 		if (myObj == null) {
-			myObj = new dataProviderUtils();
+			myObj = new dataProviderUtils2();
 		}
 		return myObj;
 	}
@@ -34,14 +34,12 @@ public class dataProviderUtils {
 		 * send to parameterized class
 		 */
 		// starting row 1 to rows sheets
-		logs.debug("Pulling data from sheet: "+ testName );
 		if (SelTestCase.getDatatable() == null) {
 			SelTestCase.setDatatable(new Xls_Reader(EnvironmentFiles.getDataSheetPath()));
 		}
 		int rows = SelTestCase.getDatatable().getRowCount(testName) - 1;
 		// if empty sheet return empty data
 		if (rows <= 0) {
-			logs.debug("No data - empty sheet");
 			Object[][] testData = new Object[1][0];
 			return testData;
 		}
@@ -55,7 +53,7 @@ public class dataProviderUtils {
 		int ignoredCases = 0;
 
 		for (int rowNum = startingRow; rowNum <= rows; rowNum++) {
-			if (testName.contains("Regression") || testName.contains("Setup") ) {
+			if (testName.contains("Regression")) {
 				if (SelTestCase.getDatatable().getCellData(testName, 1, 1).contains("runTest")
 						&& !SelTestCase.getDatatable().getCellData(testName, 1, rowNum).equals("")) {
 					for (int colNum = 0; colNum < cols; colNum++) {

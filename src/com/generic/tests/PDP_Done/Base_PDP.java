@@ -26,7 +26,7 @@ import com.generic.util.dataProviderUtils;
 
 public class Base_PDP extends SelTestCase {
 
-	private static LinkedHashMap<String, Object> invintory;
+	private static LinkedHashMap<String, Object> invintory = null ;
 	private static LinkedHashMap<String, Object> users;
 
 	// user types
@@ -60,6 +60,7 @@ public class Base_PDP extends SelTestCase {
 		return data;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test(dataProvider = "PDPs")
 	public void checkOutBaseTest(String caseId, String runTest, String desc, String proprties, String product,
 			String email, String ValidationMsg) throws Exception {
@@ -86,6 +87,8 @@ public class Base_PDP extends SelTestCase {
 			String Pdesc = PDP.getDesc();
 			
 			if (proprties.contains("desc") ){
+				logs.debug("Expected Product desc: " + (String) productDetails.get(PDP.keys.desc));
+				logs.debug("Actual Product desc: " + Pdesc);
 				logs.debug("checking PDP desc");
 				sassert().assertTrue(Pdesc.contains((String) productDetails.get(PDP.keys.desc)), "<font color=#f442cb>product desc is not expected ("+Pdesc +"\n"+(String) productDetails.get(PDP.keys.desc)+")</font>");
 				ReportUtil.takeScreenShot(getDriver());
@@ -130,8 +133,9 @@ public class Base_PDP extends SelTestCase {
 			if (proprties.contains("reviews") ){
 				logs.debug("checking PDP reviews");
 				String  PReviewsNumber = PDP.getRating();
+				Testlogs.get().debug("Actual Number of reviews: "+PReviewsNumber);
 				String expectedNumberOfReviews = (String) productDetails.get(PDP.keys.reviews);
-				Testlogs.get().debug("Number of reviews: "+PReviewsNumber);
+				Testlogs.get().debug("Expected Number of reviews: "+ expectedNumberOfReviews);
 				sassert().assertTrue(expectedNumberOfReviews.equals(PReviewsNumber), "<font color=#f442cb>product reviews expected/get</font>");
 				ReportUtil.takeScreenShot(getDriver());
 			}//reviews check

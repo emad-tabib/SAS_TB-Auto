@@ -181,8 +181,12 @@ public final class ReportUtil extends SelTestCase {
             		"]);\r\n" + 
             		"\r\n" + 
             		"  // Optional; add a title and set the width and height of the chart\r\n" + 
-            		"  var options = {'title':'Execution Results', 'width':450, 'height':300, \r\n" + 
-            		"			colors: ['#BCE954', '#e95353', '#e9d753']};\r\n" + 
+            		"var options = {'title':'Automation Execution Results Overview', 'height':320, "+
+            		"		colors: ['#2be69d', '#ff3b30', '#E4EF3A'],"+
+            		"titlePosition: 'none',"+
+            	    " pieSliceText:['none'],"+
+            	    " legend:{position: 'bottom'},"+
+            	    " chartArea:{left:70,top:30,width:'320px',height:'320px'}};"+
             		"\r\n" + 
             		"  // Display the chart inside the <div> element with id=\"piechart\"\r\n" + 
             		"  var chart = new google.visualization.PieChart(document.getElementById('piechart'));\r\n" + 
@@ -297,9 +301,8 @@ public final class ReportUtil extends SelTestCase {
             while ((strLine = br.readLine()) != null) {
             	
             	
-                if (strLine.indexOf("end_time") != -1) {
-                	strLine=strLine.replaceAll("'end_time'><FONT COLOR=#153E7E FACE=Arial SIZE=2.75><b>.*</b></td></tr><tr id='Done_end'>", 
-                			"'end_time'><FONT COLOR=#153E7E FACE=Arial SIZE=2.75><b>" +endTime+ "</b></td></tr><tr id='Done_end'>");
+                if (strLine.indexOf("~EndTime~") != -1) {
+                	strLine=strLine.replaceAll("~EndTime~", endTime);
                 }
                 buf.append(strLine);
             }
@@ -352,5 +355,11 @@ public final class ReportUtil extends SelTestCase {
         }
 
     }
+
+	public static void copyReportToC(String logDir, String dest) throws IOException {
+		FileUtils.cleanDirectory(new File(dest)); 
+		FileUtils.copyDirectory(new File(logDir), new File(dest));
+		
+	}
 
 }
