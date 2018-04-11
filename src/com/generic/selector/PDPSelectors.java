@@ -8,7 +8,7 @@ public class PDPSelectors
 	
 	public static String title = "description";
 	public static String color = "color"; 
-	public static String size = "size"; 
+	public static String size = "css,.size"; 
 	public static String qty = "quantity";
 	public static String addToCartBtn = "btn add-to-bag";
 	public static String price = "pdp-price";

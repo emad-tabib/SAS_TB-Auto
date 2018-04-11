@@ -14,9 +14,11 @@ import com.generic.page.PDP;
 import com.generic.page.Registration;
 import com.generic.page.Cart;
 import com.generic.page.CheckOut;
+import com.generic.page.HomePage;
 import com.generic.page.SignIn;
 import com.generic.setup.Common;
 import com.generic.setup.LoggingMsg;
+import com.generic.setup.PagesURLs;
 import com.generic.setup.SelTestCase;
 import com.generic.setup.SheetVariables;
 import com.generic.util.TestUtilities;
@@ -25,7 +27,7 @@ import com.generic.util.RandomUtilities;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 
-public class AccountsSetup extends SelTestCase {
+public class AccountsSetupCanada_Done extends SelTestCase {
 
 	private static LinkedHashMap<String, Object> addresses = null;
 	private static LinkedHashMap<String, Object> invintory = null;
@@ -38,7 +40,7 @@ public class AccountsSetup extends SelTestCase {
 	public static final String loggedInUser = "loggedin";
 
 	// used sheet in test
-	public static final String testDataSheet = "AccountSetupRegression";
+	public static final String testDataSheet = SheetVariables.CanadaAccountSetupsheet;
 
 
 	private static XmlTest testObject;
@@ -68,22 +70,26 @@ public class AccountsSetup extends SelTestCase {
 
 	@SuppressWarnings("unchecked") // avoid warning from linked hashmap
 	@Test(dataProvider = "Account_Setup")
-	public void accountSetupBaseTest(String caseId, String runTest, String products, String shippingMethod, String payment,
+	public void accountSetupCanadaBaseTest(String caseId, String runTest, String products, String shippingMethod, String payment,
 			String shippingAddress, String billingAddress, String email) throws Exception {
 		// Important to add this for logging/reporting
 		Testlogs.set(new SASLogger("AccountSetup_" + getBrowserName()));
 		setTestCaseReportName("AccountSetup Case");
 		logCaseDetailds(MessageFormat.format(LoggingMsg.CHECKOUTDESC, testDataSheet + "." + caseId,
 				this.getClass().getCanonicalName(), email, email, payment, shippingMethod));
-
+	
+		String country = "Canada";
 		String Pemail = getSubMailAccount(email);
 		try {
 			LinkedHashMap<String, Object> userdetails = (LinkedHashMap<String, Object>) users.get(email);
 			Testlogs.get().debug(Pemail);
 			Testlogs.get().debug((String) userdetails.get(Registration.keys.password));
-
-			Registration.fillAndClickRegister((String) userdetails.get(Registration.keys.title), "Accept", "tester",
-					Pemail, (String) userdetails.get(Registration.keys.password),
+			Thread.sleep(3000);
+	//		HomePage.closeSubcriptionPopup();
+			HomePage.changeCountry(country);
+	//		getDriver().get("https://10.30.50.17:9002/en/login");
+			Registration.fillAndClickRegister(Pemail, Pemail, (String) userdetails.get(Registration.keys.firstName), (String) userdetails.get(Registration.keys.lastName),
+					(String) userdetails.get(Registration.keys.country), (String) userdetails.get(Registration.keys.postalCode), (String) userdetails.get(Registration.keys.password),
 					(String) userdetails.get(Registration.keys.password), true);
 			
 			if(!SignIn.checkUserAccount())
@@ -91,7 +97,7 @@ public class AccountsSetup extends SelTestCase {
 				Testlogs.get().debug("Registeration failed");
 				throw new Exception("Registeration failed");
 			}
-			//SignIn.logIn(Pemail, "1234567");
+//			SignIn.logIn(Pemail, "passw0rd");
 
 			Testlogs.get().debug(MessageFormat.format(LoggingMsg.ADDING_PRODUCT, products.split("\n")[0]));
 			LinkedHashMap<String, Object> productDetails = (LinkedHashMap<String, Object>) invintory
@@ -99,22 +105,25 @@ public class AccountsSetup extends SelTestCase {
 			PDP.addProductsToCartAndClickCheckOut((String) productDetails.get(PDP.keys.url),
 					(String) productDetails.get(PDP.keys.color), (String) productDetails.get(PDP.keys.size),
 					(String) productDetails.get(PDP.keys.qty));
-
+			
+		//	String url = PagesURLs.getShoppingCartPage();
+		//	getDriver().get(url);
 			Cart.clickCheckout();
-			Thread.sleep(1000);
+		//	Thread.sleep(1000);
+		//	getDriver().get("https://qa-kiosk.tommybahama.com/en/cart/checkout");
+		//	getDriver().get("https://10.30.50.17:9002/en/cart/checkout");
 			// checkout- shipping address
 			LinkedHashMap<String, Object> addressDetails = (LinkedHashMap<String, Object>) addresses
 					.get(shippingAddress);
 			CheckOut.shippingAddress.fillAndClickNext(
-					(String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
-					(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.firstName),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.lastName),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.city),
+					(String) addressDetails.get(CheckOut.shippingAddress.keys.state),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.postal),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.phone), true);
-
+		//	CheckOut.shippingAddress.clickUseSuggestedAddress();
 			// Shipping method
 			CheckOut.shippingMethod.fillAndclickNext(shippingMethod);
 
@@ -123,25 +132,24 @@ public class AccountsSetup extends SelTestCase {
 			LinkedHashMap<String, Object> paymentDetails = (LinkedHashMap<String, Object>) paymentCards.get(payment);
 			LinkedHashMap<String, Object> billAddressDetails = (LinkedHashMap<String, Object>) addresses
 					.get(billingAddress);
-			CheckOut.paymentInnformation.fillAndclickNext(payment,
+			CheckOut.paymentInnformation.fillAndclickNext(
 					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.name),
 					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.number),
 					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireMonth),
 					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireYear),
 					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.CVCC), saveBilling,
 					billingAddress.equalsIgnoreCase(shippingAddress),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.countery),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.title),
 					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.firstName),
 					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.lastName),
 					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
+					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.countery),
 					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.city),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.postal),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.phone));
+					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.state),
+					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.postal));
 
-			CheckOut.reviewInformation.acceptTerms(true);
+			//CheckOut.reviewInformation.acceptTerms(true);
 			CheckOut.reviewInformation.placeOrder();
-
+			sassert().assertAll();
 			Common.testPass();
 		} catch (Throwable t) {
 			setTestCaseDescription(getTestCaseDescription());

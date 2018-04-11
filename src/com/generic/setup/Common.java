@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,6 +22,8 @@ import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
 import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -100,7 +103,23 @@ public class Common extends SelTestCase {
 				// TODO: change it and setup grid server
 				SelTestCase.setDriver(new RemoteWebDriver(new URL("http://10.20.20.54:4444/wd/hub"), capabilities));
 				
-			} else if (browser.contains("mobile")) {
+			} 
+			 else if (browser.equalsIgnoreCase("ChromeG")) {
+				DesiredCapabilities des=DesiredCapabilities.chrome();
+//				des.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+//				des.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.DISMISS);
+//				des.setPlatform(Platform.WIN10);
+				System.setProperty("webdriver.chrome.driver", PagesURLs.getDriversPath(browser));
+				//des.setPlatform(org.openqa.selenium.Platform.WINDOWS);
+				RemoteWebDriver rdriver ;
+				
+				//rdriver = new RemoteWebDriver(new URL("http://cv-autogrid04.crossview.inc:4444/wd/hub"),des);
+				rdriver = new RemoteWebDriver(new URL("http://10.200.254.33:4444/wd/hub"),des);
+				rdriver.manage().timeouts().pageLoadTimeout(60,TimeUnit.SECONDS);
+				rdriver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+				return rdriver;
+					
+				}else if (browser.contains("mobile")) {
 				  /*
 				   * https://cs.chromium.org/chromium/src/chrome/test/chromedriver/chrome/mobile_device_list.cc
 				   	  iPad
@@ -348,22 +367,22 @@ public class Common extends SelTestCase {
 		int addresscode = 0;
 		int firstName = 1;
 		int lastName = 2;
-		int title = 3;
-		int addressLine = 4;
-		int city = 5;
-		int postal = 6;
-		int countery = 7;
+		int addressLine = 3;
+		int city = 4;
+		int countery = 5;
+		int state = 6;
+		int postal = 7;
 		int phone = 8;
 
 		for (int row = 1; row < data.length; row++) {
 			LinkedHashMap<String, Object> address = new LinkedHashMap<>();
 			address.put((String) data[header][firstName], data[row][firstName]);
 			address.put((String) data[header][lastName], data[row][lastName]);
-			address.put((String) data[header][title], data[row][title]);
 			address.put((String) data[header][addressLine], data[row][addressLine]);
 			address.put((String) data[header][city], data[row][city]);
-			address.put((String) data[header][postal], data[row][postal]);
 			address.put((String) data[header][countery], data[row][countery]);
+			address.put((String) data[header][state], data[row][state]);
+			address.put((String) data[header][postal], data[row][postal]);
 			address.put((String) data[header][phone], data[row][phone]);
 
 			addresses.put((String) data[row][addresscode], address);
@@ -400,7 +419,7 @@ public class Common extends SelTestCase {
 		int desc = 9; 
 		int reviews = 10; 
 		int rating = 11;
-		
+		int scene7Image = 12;
 
 		for (int row = 1; row < data.length; row++) {
 			LinkedHashMap<String, Object> product = new LinkedHashMap<>();
@@ -415,9 +434,10 @@ public class Common extends SelTestCase {
 			product.put((String) data[header][desc], data[row][desc]);
 			product.put((String) data[header][reviews], data[row][reviews]);
 			product.put((String) data[header][rating], data[row][rating]);
-
+			product.put((String) data[header][scene7Image], data[row][scene7Image]);
 			products.put((String) data[row][name], product);
 		}
+		logs.debug(Arrays.asList(products)+"");
 		return products;
 	}// readProducts
 
@@ -531,20 +551,22 @@ public class Common extends SelTestCase {
 		// data map
 		int header = 0;
 		int name = 0;
-		int title = 1;
-		int userName = 2;
-		int firstName = 3;
-		int lastName = 4;
-		int password = 5;
-		int mail = 6;
+		int userName = 1;
+		int firstName = 2;
+		int lastName = 3;
+		int country = 4;
+		int postalCode = 5;
+		int password = 6;
+		int mail = 7;
 
 		for (int row = 1; row < data.length; row++) {
 			LinkedHashMap<String, Object> user = new LinkedHashMap<>();
 			user.put((String) data[header][name], data[row][name]);
-			user.put((String) data[header][title], data[row][title]);
 			user.put((String) data[header][userName], data[row][userName]);
 			user.put((String) data[header][firstName], data[row][firstName]);
 			user.put((String) data[header][lastName], data[row][lastName]);
+			user.put((String) data[header][country], data[row][country]);
+			user.put((String) data[header][postalCode], data[row][postalCode]);
 			user.put((String) data[header][password], data[row][password]);
 			user.put((String) data[header][mail], data[row][mail]);
 
@@ -553,6 +575,38 @@ public class Common extends SelTestCase {
 		logs.debug(Arrays.asList(users)+"");
 		return users;
 	}//read users
+	
+	public static String[] readRunners() {
+		ArrayList<String> runners = new ArrayList<String>();
+		
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(SheetVariables.RunnersRegressionSheet);
+		
+		// data map
+		int name = 0;
+		
+		logs.debug((String) data[0][name]+"");
+		for (int row = 0; row < data.length; row++) {
+			runners.add((String) data[row][name]);
+		}
+		return runners.toArray(new String[runners.size()]); 
+	}//read runners
+	
+	public static String[] readBrowsers() {
+
+		ArrayList<String> browsers = new ArrayList<String>();
+		
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(SheetVariables.BrowsersListingSheet);
+
+		// data map
+		int name = 0;
+
+		for (int row = 0; row < data.length; row++) {
+				browsers.add((String) data[row][name]);
+		}
+		return browsers.toArray(new String[browsers.size()]);
+	}//read browsers
 
 	public static void takeScreenShot() {
 		// TODO Auto-generated method stub

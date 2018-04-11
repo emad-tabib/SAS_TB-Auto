@@ -6,11 +6,5 @@
 		<classes>
 			<class name="com.generic.tests.login_Done.LoginValidation" />
 		</classes>
-	</test><!-- Test -->
-	<test name="Login firefox">
-		<parameter name="browserName" value="firefox"></parameter>
-		<classes>
-			<class name="com.generic.tests.login_Done.LoginValidation" />
-		</classes>
-	</test><!-- Test -->		
+	</test><!-- Test -->	
 </suite> <!-- Suite -->

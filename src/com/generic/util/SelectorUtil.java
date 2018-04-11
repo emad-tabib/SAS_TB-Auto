@@ -21,6 +21,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
@@ -221,7 +222,8 @@ public class SelectorUtil extends SelTestCase {
 			for (org.jsoup.nodes.Element e : foundElements) {
 					//logs.debug(e.toString());//Debugging purposes
 				
-					if (e.tagName().equals("input") && (e.attr("type").equals("text") || e.attr("type").equals("password") || e.attr("type").equals("") )) {
+			if (e.tagName().equals("input") && (e.attr("type").equals("number") || e.attr("type").equals("text")
+					|| e.attr("type").equals("password") || e.attr("type").equals(""))) {
 						return "type";
 					} else if (e.tagName().equals("select")) {
 						return "selectByText";
@@ -232,7 +234,8 @@ public class SelectorUtil extends SelTestCase {
 							e.tagName().equals("a")||
 							e.tagName().equals("li") ||
 							e.tagName().equals("form")||
-							e.tagName().equals("label"))
+							e.tagName().equals("label")||
+							(e.tagName().equals("input") && (e.attr("type").equals("radio")) ))
 					{
 						return "click";
 					} else if (e.tagName().equals("input") && e.attr("type").equals("submit")) {
@@ -241,7 +244,7 @@ public class SelectorUtil extends SelTestCase {
 						return "click";
 					}
 					else if (e.tagName().equals("p")||
-							e.tagName().equals("body") || e.tagName().equals("td")) {
+							e.tagName().equals("body") || e.tagName().equals("td") || e.tagName().contains("h")||e.tagName().contains("ul")) {
 						return "gettext";
 					}else if (e.tagName().equals("div") || e.tagName().equals("span"))
 					{
@@ -250,6 +253,7 @@ public class SelectorUtil extends SelTestCase {
 					else
 					{
 						logs.debug(LoggingMsg.DEFAULT_ACTION_MSG);
+						logs.debug("element type is: " +e.tagName() );
 						return "Validate"; 
 					}
 			}
@@ -366,6 +370,34 @@ public class SelectorUtil extends SelTestCase {
 	    		{
 		    		if (!SelectorUtil.isAnErrorSelector)
 		    		{
+		    			if (value.contains("ForceAction"))
+		    			{
+		    				action = value.split(",")[1];
+		    			}
+		    			
+		    			if (action.equals("hover"))
+		    			{
+		    				
+		    				Wait<WebDriver> wait = new FluentWait<WebDriver>(SelTestCase.getDriver())
+								       .withTimeout(30, TimeUnit.SECONDS)
+								       .pollingEvery(5, TimeUnit.SECONDS)
+								       .ignoring(NoSuchElementException.class);
+									   //TODO: move it to general function
+							   
+						   logs.debug("Hovering: "+ byAction.toString());
+						   
+						   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+						   jse.executeScript("arguments[0].scrollIntoView(false)", field); 
+						   Thread.sleep(200);
+						   WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
+							   public WebElement apply(WebDriver driver) {
+								   return driver.findElement(byAction);
+							   }});
+		    				
+		    				Actions HoverAction = new Actions(getDriver());
+		    				HoverAction.moveToElement(field2).click().build().perform();
+		    			}
+		    			
 					   if (action.equals("type"))
 					   {
 						  if (value.contains("getCurrentValue")) {
@@ -516,6 +548,7 @@ public class SelectorUtil extends SelTestCase {
 					   {
 						   logs.debug(MessageFormat.format(LoggingMsg.GETTING_SEL,"txt", byAction.toString()));
 						   textValue.set(field.getText());
+						   logs.debug("text is :" + textValue.get());
 					   }
 					   else if (action.equals("click,gettext"))
 					   {
@@ -529,6 +562,7 @@ public class SelectorUtil extends SelTestCase {
 						   {
 							   textVal = field.getText();
 							   textValue.set(textVal);
+							   logs.debug("text is :" + textValue.get());
 						   }catch(Exception e)
 						   {
 						   		logs.debug(MessageFormat.format(LoggingMsg.FAILED_ACTION_MSG, "get text"));
@@ -665,50 +699,37 @@ public class SelectorUtil extends SelTestCase {
 	    	return isDisplayed;
 	    }
 	    
-	    @SuppressWarnings("rawtypes")
-		public static WebElement getNthElement(List<String> subStrArr, int index) throws Exception
-	    {
-	      	getCurrentFunctionName(true);
-	    	List<String> valuesArr = new ArrayList<String>();
-	    	valuesArr.add("");
-	    	LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(new ArrayList<String>(subStrArr), valuesArr, false);
-	    	List <WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
-	    	
-	    	getCurrentFunctionName(false);
-	    	return items.get(index);
-	    }
-	    
 	    @SuppressWarnings({ "rawtypes", "unused" })
-		public static boolean isNotDisplayed(List<String> subStrArr) throws Exception
-	    {
-	    	getCurrentFunctionName(true);
-	    	boolean isNotDisplayed = false;
-	    	
-			try {
-				List<String> valuesArr = new ArrayList<String>();
-		    	valuesArr.add("");
-		    	LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(new ArrayList<String>(subStrArr), valuesArr, false);
-				return isNotDisplayed;
-				
-				}catch (NoSuchElementException e) {
-					isNotDisplayed = true;
-					return isNotDisplayed;
-				}
-	    }
-	    
-	    @SuppressWarnings("rawtypes")
-		public static String getAttr(List<String> subStrArr,String attr) throws Exception
-	    {
-	    	getCurrentFunctionName(true);
-	    	List<String> valuesArr = new ArrayList<String>();
-	    	valuesArr.add("");
-	    	LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(new ArrayList<String>(subStrArr), valuesArr, false);
-	    	List <WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
-	    	String attrValue = items.get(0).getAttribute(attr);
-	    	getCurrentFunctionName(false);
-			return attrValue;
-	    }
-	    
+	public static boolean isNotDisplayed(List<String> subStrArr) throws Exception {
+		getCurrentFunctionName(true);
+		boolean isNotDisplayed = false;
+
+		try {
+			List<String> valuesArr = new ArrayList<String>();
+			valuesArr.add("");
+			LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+					new ArrayList<String>(subStrArr), valuesArr, false);
+			return isNotDisplayed;
+
+		} catch (NoSuchElementException e) {
+			isNotDisplayed = true;
+			return isNotDisplayed;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static String getAttr(List<String> subStrArr, String attr) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+		String attrValue = items.get(0).getAttribute(attr);
+		getCurrentFunctionName(false);
+		return attrValue;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public static String getAttr(List<String> subStrArr, String attr, int index) throws Exception {
 		getCurrentFunctionName(true);
@@ -721,25 +742,77 @@ public class SelectorUtil extends SelTestCase {
 		getCurrentFunctionName(false);
 		return attrValue;
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void typeText(List<String> subStrArr, String value) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
 
-	    @SuppressWarnings("rawtypes")
-		public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr, List<String> valuesArr ) throws Exception {
-	    	return initializeSelectorsAndDoActions(subStrArr,valuesArr , true);
-	    }
-	    
-	    
-	    @SuppressWarnings({ "rawtypes", "unchecked" })
-		public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr,
-				List<String> valuesArr , boolean action) throws Exception {
-			LinkedHashMap<String, LinkedHashMap> webElementsInfo = new LinkedHashMap<String, LinkedHashMap>();
-			
-			int index = 0;
-			boolean isValidationStep = false;
-			for (String key : subStrArr) {
-				//logs.debug(key);
-				LinkedHashMap<String, Object> webElementInfo = new LinkedHashMap<>();
-				webElementInfo.put("value", valuesArr.get(index));
-				webElementInfo.put("selector", "");
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+		items.get(0).sendKeys(value);
+		getCurrentFunctionName(false);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static void clickButton(List<String> subStrArr) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
+
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+		items.get(0).click();
+		getCurrentFunctionName(false);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static WebElement getNthElement(List<String> subStrArr, int index) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+
+		getCurrentFunctionName(false);
+		return items.get(index);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static List<WebElement> getAllElements(List<String> subStrArr) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+
+		getCurrentFunctionName(false);
+		return items;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr,
+			List<String> valuesArr) throws Exception {
+		return initializeSelectorsAndDoActions(subStrArr, valuesArr, true);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr,
+			List<String> valuesArr, boolean action) throws Exception {
+		LinkedHashMap<String, LinkedHashMap> webElementsInfo = new LinkedHashMap<String, LinkedHashMap>();
+
+		int index = 0;
+		boolean isValidationStep = false;
+		for (String key : subStrArr) {
+			// logs.debug(key);
+			LinkedHashMap<String, Object> webElementInfo = new LinkedHashMap<>();
+			webElementInfo.put("value", valuesArr.get(index));
+			webElementInfo.put("selector", "");
 				webElementInfo.put("action", "");
 				webElementInfo.put("SelType", "");
 				index++;

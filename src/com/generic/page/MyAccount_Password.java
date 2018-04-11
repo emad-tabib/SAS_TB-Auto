@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.RandomUtils;
 
 import com.generic.selector.AddressBookSelectors;
-import com.generic.selector.MyAccount_EmailAddressSelectors;
+import com.generic.selector.MyAccount_Selectors_InProccess;
 import com.generic.selector.MyAccount_PasswordSelectors;
 import com.generic.selector.PersonalDetailsSelectors;
 import com.generic.setup.SelTestCase;

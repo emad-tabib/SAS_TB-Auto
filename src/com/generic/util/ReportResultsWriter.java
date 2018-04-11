@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.testng.xml.XmlTest;
+
 import com.generic.setup.EnvironmentFiles;
 import com.generic.setup.LoggingMsg;
 import com.generic.setup.SelTestCase;
@@ -37,28 +39,28 @@ public class ReportResultsWriter {
 			final String testCaseStartTime, final String testCaseEndTime, final String status, BufferedWriter out, String logFileName, String browser)
 					throws IOException, NumberFormatException {
 		out.write("<tr>\n");
-		out.write("<td width=5% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>" + ReportUtil.scriptNumber + "</b></td>\n");
+		out.write("<td >" + ReportUtil.scriptNumber + "</td>\n");
 		
-		out.write("<td width=15% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b><a href="
+		out.write("<td><b><a href="
 		        +logFileName+">"+ testCaseName + "</a></b></td>\n");
-		out.write("<td width=30% align= center><FONT COLOR=#153E7E FACE=Arial SIZE=2><b>" + testCaseDesc + "</b></td>\n");
+		out.write("<td>" + testCaseDesc + "</td>\n");
 		if (status.toLowerCase().startsWith("pass")) {
-		    out.write("<td width=10% align= center  bgcolor=#BCE954><FONT COLOR=#153E7E FACE=Arial SIZE=2><b>" + status + "</b></td>\n");
+		    out.write("<td class='status-pass'><div class='circle'></div> <span>" + status + "</span></td>\n");
 		} else if (status.toLowerCase().startsWith("fail")) {
-		    out.write("<td width=10% align= center  bgcolor=#e95353><FONT COLOR=#153E7E FACE=Arial SIZE=2><b>" + status.substring(0,4) + "</b></td>\n");
+		    out.write("<td class='status-fail'><div class='circle'></div><span>" + status.substring(0,4) + "</span></td>\n");
 		} else if (status.toLowerCase().startsWith("ignore")) {
-			out.write("<td width=10% align= center  bgcolor=Yellow><FONT COLOR=#153E7E FACE=Arial SIZE=2><b>" + status.substring(0,6) + "</b></td>\n");
+			out.write("<td class='status-ignore'><div class='circle'></div><span>" + status.substring(0,6) + "</span></td>\n");
 		}else
 		{
-			out.write("<td width=10% align= center  bgcolor=#b3b3cc><FONT COLOR=#153E7E FACE=Arial SIZE=2><b>" + status + "</b></td>\n");
+			out.write("<td>" + status + "</td>\n");
 		}
 		
-		out.write("<td width=10% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>" + testCaseStartTime + "</b></td>\n");
-		out.write("<td width=10% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>" + testCaseEndTime + "</b></td>\n");
+		out.write("<td>" + testCaseStartTime + "</td>\n");
+		out.write("<td >" + testCaseEndTime + "</td>\n");
 
 
 		out.write(calculateTestCaseRunTime(testCaseStartTime, testCaseEndTime));
-		out.write("<td width=10% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>" + browser + "</b></td>\n");
+		out.write("<td>" + browser + "</td>\n");
 		
 		out.write("</tr>\n");
 		ReportAnalyzer.analyze(ReportUtil.currentDir + "//" + logFileName, Float.parseFloat(SelTestCase.getCONFIG().getProperty("report_analysis_period")));
@@ -82,7 +84,7 @@ public class ReportResultsWriter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.print(testCaseStartTime + testCaseEndTime );
-			return "<td width=10% align= center bgcolor=#ffbfbf ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>NA</b></td>\n";
+			return "<td><b>NA</b></td>\n";
 		}
 		long duration  = end_date.getTime() - start_date.getTime();
 		//assume duration not more than one day 
@@ -91,16 +93,16 @@ public class ReportResultsWriter {
 				long diffInSeconds = TimeUnit.MILLISECONDS.toSeconds(duration)-(diffInMinutes*60);
 				
 				if (diffInMinutes > Integer.parseInt(SelTestCase.getCONFIG().getProperty("timeIndicator"))){
-					return "<td width=10% align= center bgcolor=#ffbfbf ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>"
+					return "<td >"
 				    		+String.format("%02d",diffInHours)+":"+ String.format("%02d",diffInMinutes)+":"+String.format("%02d",diffInSeconds)
-				    		+ "</b></td>\n";
+				    		+ "</td>\n";
 				}
 				else
 				{
 					
-				return "<td width=10% align= center ><FONT COLOR=#153E7E FACE= Arial  SIZE=2><b>"
+				return "<td>"
 						+String.format("%02d",diffInHours)+":"+ String.format("%02d",diffInMinutes)+":"+String.format("%02d",diffInSeconds)
-						+ "</b></td>\n";
+						+ "</td>\n";
 				}
 	}
 	
@@ -219,6 +221,8 @@ public class ReportResultsWriter {
                 } if (str.contains("~StartTime~")) {
                 	str=str.replaceAll("~StartTime~", SelTestCase.rUNDATE);
                 	
+                }if (str.contains("~SuiteName~")) {
+                	str=str.replaceAll("~SuiteName~", SelTestCase.suiteName);
                 }
                 
 		        out.append(str);

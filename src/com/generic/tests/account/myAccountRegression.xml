@@ -1,34 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite" parallel="tests" thread-count="10" data-provider-thread-count="3">
-	<test name="Account firefox">
-		<parameter name="browserName" value="firefox"></parameter>
-		<classes>
-			<class name="com.generic.tests.account.AddressBookValidation" />
-			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
-			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
-		   	<class name="com.generic.tests.account.PaymentDetailsValidation" />
-		   	<class name="com.generic.tests.account.PersonalDetailsValidation" />
-		</classes>
-	</test><!-- Test -->
 	<test name="Account chrome">
 		<parameter name="browserName" value="chrome"></parameter>
 		<classes>
-			<class name="com.generic.tests.account.AddressBookValidation" />
-			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
-			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
-		   	<class name="com.generic.tests.account.PaymentDetailsValidation" />
-		   	<class name="com.generic.tests.account.PersonalDetailsValidation" />
-		</classes>
-	</test><!-- Test -->
-	<test name="Account mobile">
-		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
-		<classes>
-			<class name="com.generic.tests.account.AddressBookValidation" />
-			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
-			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
-		   	<class name="com.generic.tests.account.PaymentDetailsValidation" />
-		   	<class name="com.generic.tests.account.PersonalDetailsValidation" />
+		<class name="com.generic.tests.account.MyAccountValidationBase_Done" />
 		</classes>
 	</test><!-- Test -->	
 </suite> <!-- Suite -->

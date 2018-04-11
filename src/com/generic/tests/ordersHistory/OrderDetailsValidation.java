@@ -107,12 +107,11 @@ public class OrderDetailsValidation extends SelTestCase {
 					.get(shippingAddress);
 
 			CheckOut.shippingAddress.fillAndClickNext(
-					(String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
-					(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.firstName),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.lastName),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.city),
+					(String) addressDetails.get(CheckOut.shippingAddress.keys.state),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.postal),
 					(String) addressDetails.get(CheckOut.shippingAddress.keys.phone), true);
 
@@ -127,21 +126,20 @@ public class OrderDetailsValidation extends SelTestCase {
 
 			logs.debug(Arrays.asList(paymentDetails)+"");
 			
-			CheckOut.paymentInnformation.fillAndclickNext(payment,
-					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.name),
-					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.number),
-					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireMonth),
-					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireYear),
-					(String) paymentDetails.get(CheckOut.paymentInnformation.keys.CVCC), true,
-					billingAddress.equalsIgnoreCase(shippingAddress),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.countery),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.title),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.firstName),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.lastName),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.city),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.postal),
-					(String) billAddressDetails.get(CheckOut.shippingAddress.keys.phone));
+					CheckOut.paymentInnformation.fillAndclickNext(
+							(String) paymentDetails.get(CheckOut.paymentInnformation.keys.name),
+							(String) paymentDetails.get(CheckOut.paymentInnformation.keys.number),
+							(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireMonth),
+							(String) paymentDetails.get(CheckOut.paymentInnformation.keys.expireYear),
+							(String) paymentDetails.get(CheckOut.paymentInnformation.keys.CVCC), true,
+							billingAddress.equalsIgnoreCase(shippingAddress),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.firstName),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.lastName),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.adddressLine),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.countery),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.city),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.state),
+							(String) billAddressDetails.get(CheckOut.shippingAddress.keys.postal));
 
 			CheckOut.reviewInformation.acceptTerms(true);
 			CheckOut.reviewInformation.placeOrder();

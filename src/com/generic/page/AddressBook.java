@@ -117,7 +117,7 @@ public class AddressBook extends SelTestCase {
 	public static void updateAddress() throws Exception {
 		getCurrentFunctionName(true);
 		shippingAddress.selectCountery("Ardenham Court");
-		shippingAddress.selectTitle("MR.");
+	//	shippingAddress.selectTitle("MR.");
 		shippingAddress.typeFirstName("Accept");
 		shippingAddress.typeLastName("Tester");
 		shippingAddress.typeAddress("Ardenham Court");
@@ -134,7 +134,7 @@ public class AddressBook extends SelTestCase {
 		getCurrentFunctionName(true);
 
 		shippingAddress.selectCountery(Countery);
-		shippingAddress.selectTitle(title);
+	//	shippingAddress.selectTitle(title);
 		shippingAddress.typeFirstName(firstName);
 		shippingAddress.typeLastName(lastName);
 		shippingAddress.typeAddress(address);
@@ -149,12 +149,12 @@ public class AddressBook extends SelTestCase {
 		getCurrentFunctionName(false);
 	}
 
-	public static void fillAndClickSave(String Countery, String title, String firstName, String lastName,
-			String address, String city, String postal, String phone) throws Exception {
+	public static void fillAndClickSave(String firstName, String lastName,
+			String address,String Countery, String city, String state, String postal, String phone) throws Exception {
 		getCurrentFunctionName(true);
 
 		shippingAddress.selectCountery(Countery);
-		shippingAddress.selectTitle(title);
+		shippingAddress.selectState(state);
 		shippingAddress.typeFirstName(firstName);
 		shippingAddress.typeLastName(lastName);
 		shippingAddress.typeAddress(address);
